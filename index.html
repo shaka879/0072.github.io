@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>职引未来 · 职途 CareerFit · 全国求职智能匹配</title>
+<meta name="description" content="职引未来 · 覆盖全国高校与本科专业目录的求职意向智能匹配平台，支持院校/专业搜索、技能推荐、省市区县三级选择、薪资挡位自动匹配、考公考编推荐与全网实时检索。">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">职</div>
+      <div>职途 CareerFit<small>职引未来 · SMART JOB MATCHING</small></div>
+    </div>
+
+    <nav class="stepbar" id="stepbar">
+      <div class="step-node active" data-step="1"><i>1</i><span>基本信息</span></div>
+      <div class="step-line"></div>
+      <div class="step-node" data-step="2"><i>2</i><span>专业技能</span></div>
+      <div class="step-line"></div>
+      <div class="step-node" data-step="3"><i>3</i><span>求职意向</span></div>
+      <div class="step-line"></div>
+      <div class="step-node" data-step="4"><i>4</i><span>匹配结果</span></div>
+    </nav>
+
+    <button class="icon-btn" id="themeBtn" title="切换深色模式" aria-label="切换深色模式">◐</button>
+    <button class="icon-btn" id="dataBtn" title="数据源与更新" aria-label="数据源设置">⛁</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>职引未来，让每一次求职<span>有据可依</span></h1>
+    <p>覆盖 34 个省级行政区的高校库、教育部本科专业目录、当前热门技能库与公开招聘岗位快照。填完三步，自动生成岗位匹配度、薪资挡位建议与考公考编方向。</p>
+    <div class="hero-chips">
+      <span class="pill live"><b>数据快照</b> 2026-11</span>
+      <span class="pill">高校 <b id="statUni">0</b> 所</span>
+      <span class="pill">专业 <b id="statMajor">0</b> 个</span>
+      <span class="pill">岗位样本 <b id="statJob">0</b> 个</span>
+      <span class="pill">支持 <b>全国省 / 市 / 区县</b></span>
+    </div>
+  </section>
+
+  <!-- 步骤 1 -->
+  <section class="panel active card" id="panel-1">
+    <div class="panel-head">
+      <div class="panel-num">01</div>
+      <div>
+        <h2>基本信息</h2>
+        <p>学历、毕业年份、院校与专业均提供标准选项，找不到可手动补充。</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="field">
+        <label>最高学历 <em>按国民教育序列</em></label>
+        <div class="chips" id="eduChips"></div>
+      </div>
+
+      <div class="field">
+        <label>毕业年份 <em>滑动选择</em><span class="wheel-mini"><button type="button" data-wheel="gradYear" data-dir="-1" aria-label="上一年">▲</button><button type="button" data-wheel="gradYear" data-dir="1" aria-label="下一年">▼</button></span></label>
+        <div class="wheel" id="gradYearWheel" aria-label="毕业年份选择"></div>
+        <span class="hint" id="gradYearHint">当前：2026 年 · 应届毕业生</span>
+      </div>
+
+      <div class="field span2">
+        <label>毕业院校 <em>全国 34 个省级行政区覆盖</em></label>
+        <div class="search-row">
+          <select class="select-input" id="uniProvince" aria-label="选择省份"></select>
+          <div class="search-wrap">
+            <input class="text-input" id="uniSearch" type="search" placeholder="搜索全国学校名称，如：华中科技、深圳职业技术">
+          </div>
+        </div>
+        <div class="result-head">
+          <span id="uniCount">请选择省份或直接搜索</span>
+          <span>已选：<b id="uniPicked">未选择</b></span>
+        </div>
+        <div class="option-list" id="uniList"></div>
+        <input class="text-input" id="uniOther" type="text" placeholder="列表中没有你的学校？手动输入学校全称（将作为自定义院校参与匹配）">
+      </div>
+
+      <div class="field span2">
+        <label>所学专业 <em>覆盖本科专业目录 12 门类 + 交叉学科</em></label>
+        <div class="search-row">
+          <select class="select-input" id="majorCategory" aria-label="选择学科门类"></select>
+          <div class="search-wrap">
+            <input class="text-input" id="majorSearch" type="search" placeholder="全库搜索专业，如：人工智能、临床医学、会计学">
+          </div>
+        </div>
+        <div class="search-row">
+          <select class="select-input" id="majorClass" aria-label="选择专业类"></select>
+          <span class="hint" style="display:flex;align-items:center">先选门类 → 再选专业类，右侧可直接搜索全库</span>
+        </div>
+        <div class="result-head">
+          <span id="majorCount">请选择门类</span>
+          <span>已选：<b id="majorPicked">未选择</b></span>
+        </div>
+        <div class="option-list" id="majorList"></div>
+        <input class="text-input" id="majorOther" type="text" placeholder="列表中没有你的专业？手动输入专业全称">
+      </div>
+
+      <div class="field">
+        <label>成绩排名 <em>自己填写</em></label>
+        <div class="rank-row">
+          <input class="text-input" id="rankInput" type="number" min="1" placeholder="名次">
+          <span class="sep">/</span>
+          <input class="text-input" id="rankTotal" type="number" min="1" placeholder="总人数">
+          <span class="rank-badge" id="rankBadge">待填写</span>
+        </div>
+        <span class="hint">如：8 / 120，系统会换算为专业前 6.7% 并写入匹配理由。</span>
+      </div>
+
+      <div class="field">
+        <label>GPA / 平均绩点 <em>可选</em></label>
+        <input class="text-input" id="gpaInput" type="number" step="0.01" min="0" max="5" placeholder="如 3.62（满分 4.0 或 5.0）">
+        <span class="hint">部分国企、央企与外企网申会要求填写 GPA。</span>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <span class="hint">信息仅保存在本机浏览器，不会上传。</span>
+      <button class="btn primary" data-next="2">下一步：专业技能 →</button>
+    </div>
+  </section>
+
+  <!-- 步骤 2 -->
+  <section class="panel card" id="panel-2">
+    <div class="panel-head">
+      <div class="panel-num">02</div>
+      <div>
+        <h2>专业技能</h2>
+        <p>根据你的专业自动调取技能库，并叠加当前招聘市场热门技能，可自由补充。</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="field span2">
+        <label>已选技能 <em id="skillCount">0 项</em></label>
+        <div class="selected-box" id="selectedSkills"></div>
+      </div>
+
+      <div class="field span2">
+        <label>专业推荐技能 <em id="skillBasedOn">基于你选择的专业</em></label>
+        <div class="option-list" id="majorSkills"></div>
+      </div>
+
+      <div class="field span2">
+        <label>当前热门技能 <em>来自公开招聘信息高频技能</em></label>
+        <div class="option-list" id="hotSkills"></div>
+      </div>
+
+      <div class="field span2">
+        <label>通用能力 <em>可多选</em></label>
+        <div class="option-list" id="commonSkills"></div>
+      </div>
+
+      <div class="field span2">
+        <label>其他技能 <em>自定义补充</em></label>
+        <div class="search-row" style="grid-template-columns:1fr 110px">
+          <input class="text-input" id="customSkillInput" type="text" placeholder="输入技能名称后回车，例如：Abaqus 仿真、CAD 制图、日语 N1">
+          <button class="btn" id="addSkillBtn">+ 添加</button>
+        </div>
+        <div class="chips" id="customSkills"></div>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn ghost" data-prev="1">← 上一步</button>
+      <button class="btn primary" data-next="3">下一步：求职意向 →</button>
+    </div>
+  </section>
+
+  <!-- 步骤 3 -->
+  <section class="panel card" id="panel-3">
+    <div class="panel-head">
+      <div class="panel-num">03</div>
+      <div>
+        <h2>求职意向</h2>
+        <p>期望城市用滚轮选择，行业有推荐项，月薪输入后自动落到对应挡位。</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="field span2">
+        <label>期望工作地点 <em>省 → 市 → 区县，支持搜索</em></label>
+        <div class="search-row three">
+          <select class="select-input" id="workProvince" aria-label="期望省份"></select>
+          <select class="select-input" id="workCity" aria-label="期望城市"></select>
+          <select class="select-input" id="workDistrict" aria-label="期望区县"></select>
+        </div>
+        <div class="search-wrap">
+          <input class="text-input" id="workSearch" type="search" placeholder="搜索城市或区县，如：深圳、浦东新区、天河区">
+        </div>
+        <div class="result-head">
+          <span id="workCount">请选择省份 / 城市，或直接搜索</span>
+          <span>已选：<b id="workPicked">未选择</b></span>
+        </div>
+        <div class="option-list" id="workList"></div>
+        <input class="text-input" id="workOther" type="text" placeholder="清单中没有？手动输入工作地点（如：XX市XX区）">
+        <div class="hot-cities" id="hotCities"></div>
+        <span class="hint" id="cityHint">当前选择：--</span>
+      </div>
+
+      <div class="field span2">
+        <label>期望行业 <em>可多选</em></label>
+        <div class="chips" id="industryChips"></div>
+      </div>
+
+      <div class="field span2">
+        <label>为你推荐的行业 <em>根据专业与技能自动生成</em></label>
+        <div class="chips" id="recommendIndustries"></div>
+      </div>
+
+      <div class="field span2">
+        <label>期望月薪 <em>自己输入，系统自动匹配挡位</em></label>
+        <div class="salary-row">
+          <div class="salary-input">
+            <input class="text-input" id="salaryInput" type="number" min="0" step="500" placeholder="如 9000">
+            <span class="unit">元 / 月</span>
+          </div>
+          <div class="bands" id="salaryBands"></div>
+        </div>
+        <span class="salary-note" id="salaryNote">输入月薪后，这里会显示挡位与同城同行业的合理区间参考。</span>
+      </div>
+
+      <div class="field span2">
+        <label>求职类型 <em>可多选，含考公考编</em></label>
+        <div class="chips" id="jobTypeChips"></div>
+      </div>
+
+      <div class="field">
+        <label>到岗时间 <em>可选</em></label>
+        <select class="select-input" id="arrivalSelect">
+          <option value="">不限 / 随时到岗</option>
+          <option>即刻到岗</option>
+          <option>1 周内</option>
+          <option>1 个月内</option>
+          <option>毕业后到岗</option>
+          <option>3 个月内</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>工作性质偏好 <em>可选</em></label>
+        <select class="select-input" id="workModeSelect">
+          <option value="">不限</option>
+          <option>线下坐班</option>
+          <option>线上线下结合</option>
+          <option>远程办公</option>
+          <option>驻外 / 出差</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn ghost" data-prev="2">← 上一步</button>
+      <button class="btn primary" id="matchBtn">生成匹配结果 →</button>
+    </div>
+  </section>
+
+  <!-- 步骤 4 -->
+  <section class="panel card" id="panel-4">
+    <div class="panel-head">
+      <div class="panel-num">04</div>
+      <div>
+        <h2>匹配结果</h2>
+        <p>基于技能、专业、行业、城市、薪资、学历六维加权计算，并给出可执行的检索入口。</p>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><span>推荐岗位</span><b id="kpiJobs">0<small> 个</small></b></div>
+      <div class="kpi"><span>平均匹配度</span><b id="kpiAvg">0<small> %</small></b></div>
+      <div class="kpi"><span>薪资挡位建议</span><b id="kpiSalary">--</b></div>
+    </div>
+
+    <div class="notice" id="dataNotice">
+      <b>关于「实时」：</b>浏览器出于安全限制无法直接抓取招聘网站数据，本页提供的是内置数据快照 + 一键跳转全网实时检索。点击右上角 <b>⛁</b> 可配置你自己的后端接口，实现岗位数据自动同步。
+    </div>
+
+    <div class="section-title">
+      <h3>岗位匹配清单</h3>
+      <p id="matchSummary">按综合匹配度排序</p>
+    </div>
+    <div class="job-list" id="jobList"></div>
+
+    <div class="section-title">
+      <h3>考公考编通道</h3>
+      <p>按专业适配度筛选，建议结合当年公告</p>
+    </div>
+    <div class="civil-grid" id="civilList"></div>
+
+    <div class="section-title">
+      <h3>全网实时检索</h3>
+      <p>点击直达对应平台的真实搜索结果</p>
+    </div>
+    <div class="platform-grid" id="platformList"></div>
+
+    <div class="nav-actions">
+      <button class="btn ghost" data-prev="3">← 修改求职意向</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="exportBtn">导出结果 JSON</button>
+        <button class="btn primary" id="restartBtn">重新匹配</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="footer">
+  职引未来 · 职途 CareerFit · 数据来自公开高校名单、教育部本科专业目录与公开招聘信息整理 · 仅供求职参考
+</div>
+
+<!-- 数据源弹窗 -->
+<div class="modal" id="dataModal">
+  <div class="modal-card">
+    <h3>数据源与更新</h3>
+    <p>可选接入你自建的后端接口（返回 JSON），实现岗位数据自动同步；留空则使用内置快照 + 全网检索。</p>
+    <div class="field">
+      <label>接口地址</label>
+      <input class="text-input" id="apiInput" type="url" placeholder="https://your-domain.com/api/jobs">
+    </div>
+    <div class="field">
+      <label>接口格式说明</label>
+      <span class="hint">返回 <code>{ "updatedAt": "2026-11-09", "jobs": [{ "title", "industry", "skills": [], "salary": [min,max], "edu", "types": [] }] }</code>，同源或已开启 CORS 即可。</span>
+    </div>
+    <div class="field">
+      <label>当前数据版本</label>
+      <span class="hint" id="dataVersion">内置快照：2026-11</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="closeModalBtn">关闭</button>
+      <button class="btn" id="syncBtn">立即同步</button>
+      <button class="btn primary" id="saveApiBtn">保存配置</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/data/universities.js"></script>
+<script src="assets/js/data/majors.js"></script>
+<script src="assets/js/data/cities.js"></script>
+<script src="assets/js/data/districts-north.js"></script>
+<script src="assets/js/data/districts-south.js"></script>
+<script src="assets/js/data/skills.js"></script>
+<script src="assets/js/data/careers.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
